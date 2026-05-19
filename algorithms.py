@@ -60,7 +60,7 @@ def fifo(pages, capacity):
                 frames[idx] = p
                 queue.append(p)
             note = "Hàng đợi: " + " -> ".join(str(x) for x in queue)
-
+        # print(frames)
         steps.append({
             "page": p,
             "frames": _snapshot(frames),
@@ -143,13 +143,16 @@ def lru(pages, capacity):
                 frames[idx] = p
             else:
                 # tim trang co last_used nho nhat
-                victim = min(frames, key=lambda x: last_used.get(x, -1))
+                victim = frames[0]
+                for f in frames[1:]:
+                    if last_used[victim] > last_used[f]:
+                        victim = f
                 idx = frames.index(victim)
                 frames[idx] = p
 
         last_used[p] = i
         note = "Lần dùng gần nhất: " + ", ".join(
-            "{}@{}".format(f, last_used[f]) for f in frames if f is not None
+            "{} -> {}".format(f, last_used[f]) for f in frames if f is not None
         )
 
         steps.append({
@@ -186,7 +189,10 @@ def mru(pages, capacity):
                 frames[idx] = p
             else:
                 # tim trang co last_used lon nhat (vua dung gan day nhat)
-                victim = max(frames, key=lambda x: last_used.get(x, -1))
+                victim = frames[0]
+                for f in frames[1:]:
+                    if last_used[victim] < last_used[f]:
+                        victim = f
                 idx = frames.index(victim)
                 frames[idx] = p
 
@@ -229,10 +235,13 @@ def lfu(pages, capacity):
                 frames[idx] = p
             else:
                 # min freq, tie -> arrival nho nhat (cu nhat)
-                victim = min(
-                    frames,
-                    key=lambda x: (freq[x], arrival[x]),
-                )
+                victim = frames[0]
+                for f in frames[1:]:
+                    if freq[f] < freq[victim]:
+                        victim = f
+                    elif freq[f] == freq[victim]:
+                        if arrival[f] < arrival[victim]:
+                            victim = f
                 idx = frames.index(victim)
                 del freq[victim]
                 del arrival[victim]
@@ -280,10 +289,13 @@ def mfu(pages, capacity):
                 frames[idx] = p
             else:
                 # max freq, tie -> arrival nho nhat
-                victim = max(
-                    frames,
-                    key=lambda x: (freq[x], -arrival[x]),
-                )
+                victim = frames[0]
+                for f in frames[1:]:
+                    if freq[f] > freq[victim]:
+                        victim = f
+                    elif freq[f] == freq[victim]:
+                        if arrival[f] > arrival[victim]:
+                            victim = f
                 idx = frames.index(victim)
                 del freq[victim]
                 del arrival[victim]

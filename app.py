@@ -27,6 +27,43 @@ import algorithms as algo
 
 # Chuoi mau gay Belady cho FIFO khi tang frame tu 3 -> 4
 BELADY_SAMPLE = "1 2 3 4 1 2 5 1 2 3 4 5"
+# 1 2 3 4 1 2 5 1 2 3 4 5
+"""
+=== Cac chuoi co san ===
+{
+'1 2 3 4 1 2 5 1 2 3 4 5'
+  faults theo frame 1..7 = [12, 12, 9, 10, 5, 5, 5]
+  Belady: [(3, 4, 9, 10)]
+
+'3 2 1 0 3 2 4 3 2 1 0 4'
+  faults theo frame 1..7 = [12, 12, 9, 10, 5, 5, 5]
+  Belady: [(3, 4, 9, 10)]
+
+'4 3 2 1 4 3 5 4 3 2 1 5'
+  faults theo frame 1..7 = [12, 12, 9, 10, 5, 5, 5]
+  Belady: [(3, 4, 9, 10)]
+
+'1 2 3 4 5 6 1 2 3 4 5 6'
+  faults theo frame 1..7 = [12, 12, 12, 12, 12, 6, 6]
+  Belady: []
+
+'0 1 2 3 0 1 4 0 1 2 3 4'
+  faults theo frame 1..7 = [12, 12, 9, 10, 5, 5, 5]
+  Belady: [(3, 4, 9, 10)]
+
+'5 4 3 2 1 5 4 6 5 4 3 2 1 6'
+  faults theo frame 1..7 = [14, 14, 12, 11, 12, 6, 6]
+  Belady: [(4, 5, 11, 12)]
+
+'2 3 4 5 2 3 6 2 3 4 5 6'
+  faults theo frame 1..7 = [12, 12, 9, 10, 5, 5, 5]
+  Belady: [(3, 4, 9, 10)]
+
+'1 2 3 4 1 2 5 1 2 3 4 5 6 1 2 3 4 5 6'
+  faults theo frame 1..7 = [19, 19, 16, 17, 12, 6, 6]
+  Belady: [(3, 4, 16, 17)]
+}
+"""
 
 
 # ---------------------------------------------------------------------------
@@ -42,9 +79,9 @@ class PageReplacementApp(tk.Tk):
         self._build_status()
 
         # chay san mot lan voi du lieu mau
-        self.entry_pages.insert(0, BELADY_SAMPLE)
-        self.entry_capacity.insert(0, "3")
-        self.combo_algo.set("FIFO")
+        # self.entry_pages.insert(0, BELADY_SAMPLE)
+        # self.entry_capacity.insert(0, "3")
+        # self.combo_algo.set("FIFO")
         self.run_simulation()
 
     # ----------------------------------------------------------- top panel
